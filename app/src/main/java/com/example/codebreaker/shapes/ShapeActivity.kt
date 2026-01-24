@@ -24,10 +24,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.PlainTooltipBox
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.codebreaker.ui.theme.CodeBreakerTheme
+import kotlinx.coroutines.launch
 
 class ShapeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,23 +94,21 @@ fun ShapeGrid() {
             }
 
             // Headers for feedback columns
-            Box(
-                modifier = Modifier.width(30.dp),
-                contentAlignment = Alignment.Center
+            Row(
+                modifier = Modifier.width(60.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "✓", color = Color.Green, fontSize = 20.sp)
-                    HintInfoButton(hint = "Shapes in correct positions")
-                }
+                Text(text = "✓", color = Color.Green, fontSize = 20.sp)
+                HintInfoButton(hint = "Shapes in correct positions")
             }
-            Box(
-                modifier = Modifier.width(30.dp),
-                contentAlignment = Alignment.Center
+            Row(
+                modifier = Modifier.width(60.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "–", color = Color(0xFFFFA500), fontSize = 20.sp)
-                    HintInfoButton(hint = "Correct shapes in wrong positions")
-                }
+                Text(text = "–", color = Color(0xFFFFA500), fontSize = 20.sp)
+                HintInfoButton(hint = "Correct shapes in wrong positions")
             }
         }
 
@@ -130,13 +133,24 @@ fun ShapeGrid() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HintInfoButton(hint: String) {
-    PlainTooltipBox(
-        tooltip = { Text(hint) }
+    val scope = rememberCoroutineScope()
+    val tooltipState = rememberTooltipState()
+    TooltipBox(
+        positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+        tooltip = { PlainTooltip { Text(hint) } },
+        state = tooltipState,
     ) {
         IconButton(
-            onClick = { /* Clicks on info buttons are not handled */ },
+            onClick = {
+                scope.launch {
+                    if (tooltipState.isVisible) {
+                        tooltipState.dismiss()
+                    } else {
+                        tooltipState.show()
+                    }
+                }
+            },
             modifier = Modifier
-                .tooltipAnchor()
                 .size(20.dp)
         ) {
             Icon(
