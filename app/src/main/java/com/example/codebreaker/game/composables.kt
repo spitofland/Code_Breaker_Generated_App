@@ -126,33 +126,43 @@ fun Keyboard(
 
     Column(
         modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
             row1.forEach { char ->
-                KeyButton(char = char, onClick = { onLetterClick(char) })
+                KeyButton(char = char, onClick = { onLetterClick(char) }, modifier = Modifier.weight(1f))
             }
         }
-        Spacer(modifier = Modifier.height(4.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Spacer(modifier = Modifier.weight(0.5f))
             row2.forEach { char ->
-                KeyButton(char = char, onClick = { onLetterClick(char) })
+                KeyButton(char = char, onClick = { onLetterClick(char) }, modifier = Modifier.weight(1f))
             }
+            Spacer(modifier = Modifier.weight(0.5f))
         }
-        Spacer(modifier = Modifier.height(4.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            Button(onClick = onEnterClick) { Text("Enter") }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Button(onClick = onEnterClick, modifier = Modifier.weight(1.5f)) { Text("Enter") }
             row3.forEach { char ->
-                KeyButton(char = char, onClick = { onLetterClick(char) })
+                KeyButton(char = char, onClick = { onLetterClick(char) }, modifier = Modifier.weight(1f))
             }
-            Button(onClick = onBackspaceClick) { Text("<") }
+            Button(onClick = onBackspaceClick, modifier = Modifier.weight(1.5f)) { Text("<") }
         }
     }
 }
 
 @Composable
-fun KeyButton(char: Char, onClick: () -> Unit) {
-    Button(onClick = onClick, modifier = Modifier.size(36.dp, 48.dp)) {
+fun KeyButton(char: Char, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Button(onClick = onClick, modifier = modifier.height(48.dp)) {
         Text(text = char.toString())
     }
 }
