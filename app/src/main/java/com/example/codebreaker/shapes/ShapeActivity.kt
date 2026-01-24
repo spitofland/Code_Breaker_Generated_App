@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,9 +51,22 @@ fun ShapeScreen(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.Top
+            ) {
+                ShapeGrid()
+                Spacer(modifier = Modifier.width(8.dp))
+                FeedbackColumns()
+            }
+        }
         Spacer(modifier = Modifier.height(16.dp))
-        ShapeGrid()
-        Spacer(modifier = Modifier.weight(1f)) // Pushes buttons to the bottom
         ShapeButtons()
         Spacer(modifier = Modifier.height(16.dp))
     }
@@ -59,9 +75,8 @@ fun ShapeScreen(modifier: Modifier = Modifier) {
 @Composable
 fun ShapeGrid() {
     Column {
-        for (i in 0 until 6) {
+        for (i in 0 until 12) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
                 for (j in 0 until 4) {
@@ -75,6 +90,55 @@ fun ShapeGrid() {
         }
     }
 }
+
+@Composable
+fun FeedbackColumns() {
+    Row(verticalAlignment = Alignment.Top) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.width(60.dp)
+        ) {
+            Text(text = "✓", color = Color.Green, fontSize = 20.sp)
+            Text(
+                text = "Shapes in correct positions",
+                fontSize = 10.sp,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            for (i in 0 until 12) {
+                FeedbackBox()
+                Spacer(modifier = Modifier.height(4.dp))
+            }
+        }
+        Spacer(modifier = Modifier.width(8.dp))
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.width(60.dp)
+        ) {
+            Text(text = "–", color = Color(0xFFFFA500), fontSize = 20.sp)
+            Text(
+                text = "Correct shapes in wrong positions",
+                fontSize = 10.sp,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            for (i in 0 until 12) {
+                FeedbackBox()
+                Spacer(modifier = Modifier.height(4.dp))
+            }
+        }
+    }
+}
+
+@Composable
+fun FeedbackBox() {
+    Box(
+        modifier = Modifier
+            .size(20.dp)
+            .border(1.dp, Color.DarkGray)
+    )
+}
+
 
 @Composable
 fun GridBox(text: String, color: Color) {
