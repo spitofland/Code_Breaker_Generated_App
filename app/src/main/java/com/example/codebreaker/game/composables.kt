@@ -33,7 +33,7 @@ fun GameScreen(viewModel: GameViewModel) {
     ) {
         Text(text = "Code Breaker", fontSize = 24.sp)
         Spacer(modifier = Modifier.height(16.dp))
-        GameGrid(gameState = gameState, secretWord = viewModel.gameState.value.secretWord)
+        GameGrid(gameState = gameState, secretWord = gameState.secretWord)
         Spacer(modifier = Modifier.height(16.dp))
         Keyboard(
             onLetterClick = { viewModel.onLetterClick(it) },
