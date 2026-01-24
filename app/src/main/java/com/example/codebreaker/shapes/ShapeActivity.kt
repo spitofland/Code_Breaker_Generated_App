@@ -18,14 +18,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.PlainTooltipBox
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,17 +59,11 @@ fun ShapeScreen(modifier: Modifier = Modifier) {
         Column(
             modifier = Modifier
                 .weight(1f)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.Top
-            ) {
-                ShapeGrid()
-                Spacer(modifier = Modifier.width(8.dp))
-                FeedbackColumns()
-            }
+            Spacer(modifier = Modifier.height(16.dp))
+            ShapeGrid()
         }
         Spacer(modifier = Modifier.height(16.dp))
         ShapeButtons()
@@ -72,60 +71,79 @@ fun ShapeScreen(modifier: Modifier = Modifier) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShapeGrid() {
-    Column {
-        for (i in 0 until 12) {
-            Row(
-                horizontalArrangement = Arrangement.Center
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        // Header Row
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            // Spacers for alignment with grid
+            repeat(4) {
+                Spacer(modifier = Modifier.width(60.dp))
+            }
+
+            // Headers for feedback columns
+            Box(
+                modifier = Modifier.width(30.dp),
+                contentAlignment = Alignment.Center
             ) {
-                for (j in 0 until 4) {
-                    GridBox(text = "", color = Color.Gray)
-                    if (j < 3) {
-                        Spacer(modifier = Modifier.width(4.dp))
-                    }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = "✓", color = Color.Green, fontSize = 20.sp)
+                    HintInfoButton(hint = "Shapes in correct positions")
                 }
             }
-            Spacer(modifier = Modifier.height(4.dp))
+            Box(
+                modifier = Modifier.width(30.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = "–", color = Color(0xFFFFA500), fontSize = 20.sp)
+                    HintInfoButton(hint = "Correct shapes in wrong positions")
+                }
+            }
+        }
+
+        // Grid Rows
+        for (i in 0 until 12) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Shape Boxes
+                repeat(4) {
+                    GridBox(text = "", color = Color.Gray)
+                }
+                // Feedback Boxes
+                FeedbackBox()
+                FeedbackBox()
+            }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FeedbackColumns() {
-    Row(verticalAlignment = Alignment.Top) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.width(60.dp)
+fun HintInfoButton(hint: String) {
+    PlainTooltipBox(
+        tooltip = { Text(hint) }
+    ) {
+        IconButton(
+            onClick = { /* Clicks on info buttons are not handled */ },
+            modifier = Modifier
+                .tooltipAnchor()
+                .size(20.dp)
         ) {
-            Text(text = "✓", color = Color.Green, fontSize = 20.sp)
-            Text(
-                text = "Shapes in correct positions",
-                fontSize = 10.sp,
-                textAlign = TextAlign.Center
+            Icon(
+                imageVector = Icons.Default.Info,
+                contentDescription = "Hint",
+                modifier = Modifier.size(16.dp)
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            for (i in 0 until 12) {
-                FeedbackBox()
-                Spacer(modifier = Modifier.height(4.dp))
-            }
-        }
-        Spacer(modifier = Modifier.width(8.dp))
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.width(60.dp)
-        ) {
-            Text(text = "–", color = Color(0xFFFFA500), fontSize = 20.sp)
-            Text(
-                text = "Correct shapes in wrong positions",
-                fontSize = 10.sp,
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            for (i in 0 until 12) {
-                FeedbackBox()
-                Spacer(modifier = Modifier.height(4.dp))
-            }
         }
     }
 }
@@ -134,11 +152,10 @@ fun FeedbackColumns() {
 fun FeedbackBox() {
     Box(
         modifier = Modifier
-            .size(20.dp)
+            .size(30.dp)
             .border(1.dp, Color.DarkGray)
     )
 }
-
 
 @Composable
 fun GridBox(text: String, color: Color) {
@@ -189,7 +206,6 @@ fun ShapeButtons() {
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
