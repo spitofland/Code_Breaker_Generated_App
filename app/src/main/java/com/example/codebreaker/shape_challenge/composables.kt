@@ -180,3 +180,12 @@ fun ShapeButtons() {
         }
     }
 }
+
+enum class Shapes {
+    CIRCLE,
+    TRIANGLE,
+    SQUARE,
+    PLUS,
+    CRESCENT,
+    STAR,
+}
