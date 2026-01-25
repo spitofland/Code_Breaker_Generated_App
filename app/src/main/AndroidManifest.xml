@@ -23,12 +23,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".game.GameActivity"
+            android:name=".word_challenge.WordChallengeActivity"
             android:exported="false"
             android:label="@string/app_name"
             android:theme="@style/Theme.CodeBreaker" />
         <activity
-            android:name=".shapes.ShapeActivity"
+            android:name=".shape_challenge.ShapeChallengeActivity"
             android:exported="false"
             android:label="@string/app_name"
             android:theme="@style/Theme.CodeBreaker" />
