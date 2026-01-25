@@ -5,5 +5,6 @@ data class GameState(
     val currentGuess: String = "",
     val secretWord: String = "",
     val isGameOver: Boolean = false,
-    val hasWon: Boolean = false
+    val hasWon: Boolean = false,
+    val isCurrentGuessValidWord: Boolean = false,
 )

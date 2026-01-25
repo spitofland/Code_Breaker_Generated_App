@@ -43,9 +43,10 @@ private fun WordChallengeContent(
     ) {
         Text(text = "Code Breaker", fontSize = 24.sp)
         Spacer(modifier = Modifier.height(16.dp))
-        GameGrid(gameState = gameState, secretWord = gameState.secretWord)
+        GameGrid(gameState = gameState)
         Spacer(modifier = Modifier.height(16.dp))
         Keyboard(
+            gameState = gameState,
             onLetterClick = onLetterClick,
             onEnterClick = onEnterClick,
             onBackspaceClick = onBackspaceClick
@@ -59,7 +60,7 @@ fun WordChallengeScreenPreview() {
     CodeBreakerTheme {
         WordChallengeContent(
             gameState = GameState(
-                guesses = listOf("GHOST"),
+                guesses = listOf("SPELL"),
                 currentGuess = "APP",
                 secretWord = "APPLE"
             ),
