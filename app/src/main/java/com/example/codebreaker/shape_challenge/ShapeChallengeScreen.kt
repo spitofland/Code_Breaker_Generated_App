@@ -60,7 +60,7 @@ fun ShapeScreenPreview() {
                     secretCode = listOf(Shape.TRIANGLE, Shape.PLUS, Shape.CIRCLE, Shape.CIRCLE),
                     guesses = listOf(
                         listOf(Shape.TRIANGLE, Shape.TRIANGLE, Shape.TRIANGLE, Shape.TRIANGLE),
-                        listOf(Shape.TRIANGLE, Shape.SQUARE, Shape.CRESCENT, Shape.CIRCLE),
+                        listOf(Shape.TRIANGLE, Shape.SQUARE, Shape.PLUS, Shape.CIRCLE),
                     ),
                     currentGuess = listOf(Shape.PLUS, Shape.CRESCENT, Shape.STAR),
                 )

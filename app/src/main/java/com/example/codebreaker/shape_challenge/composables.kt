@@ -125,24 +125,17 @@ fun ShapeGrid(state: ShapeChallengeState) {
 private fun calculateFeedback(guess: List<Shape>, secret: List<Shape>): Pair<Int, Int> {
     var correctPositions = 0
     var correctShapes = 0
-    val secretCounts = secret.groupingBy { it }.eachCount().toMutableMap()
-    val guessCounts = guess.groupingBy { it }.eachCount().toMutableMap()
+    val unmatchedSecret =
+        secret.filterIndexed { index, shape ->
+            guess[index] != shape
+        }.toMutableList()
 
-    val exactMatches = mutableListOf<Boolean>()
-    for (i in secret.indices) {
-        val isMatch = secret[i] == guess[i]
-        if (isMatch) {
+    guess.forEachIndexed { index, shape ->
+        if (shape == secret[index]) {
             correctPositions++
-            val shape = secret[i]
-            secretCounts[shape] = secretCounts.getValue(shape) - 1
-            guessCounts[shape] = guessCounts.getValue(shape) - 1
-        }
-        exactMatches.add(isMatch)
-    }
-
-    for ((shape, count) in guessCounts) {
-        if (count > 0) {
-            correctShapes += minOf(count, secretCounts.getOrDefault(shape, 0))
+        } else if (unmatchedSecret.contains(shape)) {
+            unmatchedSecret.remove(shape) // Prevent double reporting
+            correctShapes++
         }
     }
 

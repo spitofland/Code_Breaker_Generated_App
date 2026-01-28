@@ -12,7 +12,9 @@ class ShapeChallengeViewModel(initialState: ShapeChallengeState = ShapeChallenge
     val uiState: StateFlow<ShapeChallengeState> = _uiState.asStateFlow()
 
     init {
-        generateSecretCode()
+        if (initialState.secretCode.isEmpty()) {
+            generateSecretCode()
+        }
     }
 
     private fun generateSecretCode() {
