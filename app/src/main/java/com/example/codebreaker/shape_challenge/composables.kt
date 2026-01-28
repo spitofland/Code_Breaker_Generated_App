@@ -1,5 +1,6 @@
 package com.example.codebreaker.shape_challenge
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -7,12 +8,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
@@ -20,7 +17,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.PlainTooltip
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
@@ -30,11 +26,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.codebreaker.ui.theme.CodeBreakerTheme
+import com.example.codebreaker.R
 import kotlinx.coroutines.launch
+import kotlin.math.ceil
+import kotlin.math.sqrt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -146,46 +144,36 @@ fun GridBox(text: String, color: Color) {
 @Composable
 fun ShapeButtons() {
     Column(
-        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Button(onClick = { /*TODO*/ }) {
-                Text("circle")
-            }
-            Button(onClick = { /*TODO*/ }) {
-                Text("triangle")
-            }
-            Button(onClick = { /*TODO*/ }) {
-                Text("square")
-            }
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Button(onClick = { /*TODO*/ }) {
-                Text("plus")
-            }
-            Button(onClick = { /*TODO*/ }) {
-                Text("crescent")
-            }
-            Button(onClick = { /*TODO*/ }) {
-                Text("star")
+        val numShapes = Shape.entries.count()
+        val numColumns = ceil(sqrt(numShapes.toFloat())).toInt()
+
+        Shape.entries.chunked(numColumns).forEach { row ->
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                row.forEach { shape ->
+                    Button(onClick = { /*TODO*/ }) {
+                        Image(
+                            painter = painterResource(id = shape.drawable),
+                            contentDescription = shape.toString(),
+                            modifier = Modifier.size(24.dp) // Adjust size as needed
+                        )
+                    }
+                }
             }
         }
     }
 }
 
-enum class Shapes {
-    CIRCLE,
-    TRIANGLE,
-    SQUARE,
-    PLUS,
-    CRESCENT,
-    STAR,
+enum class Shape(val drawable: Int) {
+    CIRCLE(R.drawable.ic_circle),
+    TRIANGLE(R.drawable.ic_triangle),
+    SQUARE(R.drawable.ic_square),
+    PLUS(R.drawable.ic_plus),
+    CRESCENT(R.drawable.ic_crescent),
+    STAR(R.drawable.ic_star),
+    ;
 }
