@@ -21,7 +21,10 @@ import androidx.compose.ui.unit.dp
 import com.example.codebreaker.ui.theme.CodeBreakerTheme
 
 @Composable
-fun ShapeScreen(modifier: Modifier = Modifier) {
+fun ShapeChallengeScreen(
+    viewModel: ShapeChallengeViewModel,
+    modifier: Modifier = Modifier,
+) {
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -33,7 +36,7 @@ fun ShapeScreen(modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(16.dp))
-            ShapeGrid()
+            ShapeGrid(state = viewModel.uiState.value)
         }
         Spacer(modifier = Modifier.height(8.dp))
         Row(
@@ -41,14 +44,7 @@ fun ShapeScreen(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            ShapeButtons()
-            Button(
-                onClick = { /*TODO*/ },
-                modifier = Modifier.height(60.dp),
-                contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 8.dp),
-            ) {
-                Text(text = "Submit")
-            }
+            ShapeButtons(viewModel = viewModel)
         }
         Spacer(modifier = Modifier.height(8.dp))
     }
@@ -58,6 +54,17 @@ fun ShapeScreen(modifier: Modifier = Modifier) {
 @Composable
 fun ShapeScreenPreview() {
     CodeBreakerTheme {
-        ShapeScreen()
+        ShapeChallengeScreen(
+            viewModel = ShapeChallengeViewModel(
+                ShapeChallengeState(
+                    secretCode = listOf(Shape.TRIANGLE, Shape.PLUS, Shape.CIRCLE, Shape.CIRCLE),
+                    guesses = listOf(
+                        listOf(Shape.TRIANGLE, Shape.TRIANGLE, Shape.TRIANGLE, Shape.TRIANGLE),
+                        listOf(Shape.TRIANGLE, Shape.SQUARE, Shape.CRESCENT, Shape.CIRCLE),
+                    ),
+                    currentGuess = listOf(Shape.PLUS, Shape.CRESCENT, Shape.STAR),
+                )
+            ),
+        )
     }
 }

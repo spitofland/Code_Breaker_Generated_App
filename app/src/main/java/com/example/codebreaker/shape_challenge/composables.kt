@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -36,7 +35,7 @@ import kotlin.math.sqrt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShapeGrid() {
+fun ShapeGrid(state: ShapeChallengeState) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -70,15 +69,50 @@ fun ShapeGrid() {
             }
         }
 
-        // Grid Rows
-        for (i in 0 until 12) {
+        val guesses = state.guesses
+        val currentGuess = state.currentGuess
+        val remainingGuesses = 11 - guesses.size
+
+        guesses.forEach { guess ->
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                guess.forEach { shape ->
+                    GridBox(shape = shape)
+                }
+                val (correctPosition, correctShape) = calculateFeedback(guess, state.secretCode)
+                FeedbackBox(text = correctPosition.toString())
+                FeedbackBox(text = correctShape.toString())
+            }
+        }
+
+        if (guesses.size < 12) {
+            // Current guess row
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                currentGuess.forEach { shape ->
+                    GridBox(shape = shape)
+                }
+                repeat(4 - currentGuess.size) {
+                    GridBox(shape = null)
+                }
+                FeedbackBox()
+                FeedbackBox()
+            }
+        }
+
+        // Empty rows
+        repeat(remainingGuesses) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Shape Boxes
                 repeat(4) {
-                    GridBox(text = "", color = Color.Gray)
+                    GridBox(shape = null)
                 }
                 // Feedback Boxes
                 FeedbackBox()
@@ -87,6 +121,34 @@ fun ShapeGrid() {
         }
     }
 }
+
+private fun calculateFeedback(guess: List<Shape>, secret: List<Shape>): Pair<Int, Int> {
+    var correctPositions = 0
+    var correctShapes = 0
+    val secretCounts = secret.groupingBy { it }.eachCount().toMutableMap()
+    val guessCounts = guess.groupingBy { it }.eachCount().toMutableMap()
+
+    val exactMatches = mutableListOf<Boolean>()
+    for (i in secret.indices) {
+        val isMatch = secret[i] == guess[i]
+        if (isMatch) {
+            correctPositions++
+            val shape = secret[i]
+            secretCounts[shape] = secretCounts.getValue(shape) - 1
+            guessCounts[shape] = guessCounts.getValue(shape) - 1
+        }
+        exactMatches.add(isMatch)
+    }
+
+    for ((shape, count) in guessCounts) {
+        if (count > 0) {
+            correctShapes += minOf(count, secretCounts.getOrDefault(shape, 0))
+        }
+    }
+
+    return Pair(correctPositions, correctShapes)
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -121,28 +183,37 @@ fun HintInfoButton(hint: String) {
 }
 
 @Composable
-fun FeedbackBox() {
+fun FeedbackBox(text: String = "") {
     Box(
         modifier = Modifier
             .size(30.dp)
-            .border(1.dp, Color.DarkGray)
-    )
-}
-
-@Composable
-fun GridBox(text: String, color: Color) {
-    Box(
-        modifier = Modifier
-            .size(60.dp)
-            .border(2.dp, color),
+            .border(1.dp, Color.DarkGray),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = text, fontSize = 24.sp)
+        Text(text = text, fontSize = 18.sp)
     }
 }
 
 @Composable
-fun ShapeButtons() {
+fun GridBox(shape: Shape?) {
+    Box(
+        modifier = Modifier
+            .size(60.dp)
+            .border(2.dp, Color.Gray),
+        contentAlignment = Alignment.Center
+    ) {
+        if (shape != null) {
+            Image(
+                painter = painterResource(id = shape.drawable),
+                contentDescription = shape.toString(),
+                modifier = Modifier.size(40.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun ShapeButtons(viewModel: ShapeChallengeViewModel) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -155,7 +226,7 @@ fun ShapeButtons() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 row.forEach { shape ->
-                    Button(onClick = { /*TODO*/ }) {
+                    Button(onClick = { viewModel.addToGuess(shape) }) {
                         Image(
                             painter = painterResource(id = shape.drawable),
                             contentDescription = shape.toString(),
@@ -163,6 +234,14 @@ fun ShapeButtons() {
                         )
                     }
                 }
+            }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(onClick = { viewModel.submitGuess() }) {
+                Text("Submit")
+            }
+            Button(onClick = { viewModel.removeLastFromGuess() }) {
+                Text("Del")
             }
         }
     }
