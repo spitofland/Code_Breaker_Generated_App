@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,7 +18,10 @@ import com.example.codebreaker.ui.theme.CodeBreakerTheme
 
 @Composable
 fun ShapeChallengeScreen(
-    viewModel: ShapeChallengeViewModel,
+    uiState: ShapeChallengeState,
+    addToGuess: (Shape) -> Unit,
+    submitGuess: () -> Unit,
+    removeLastFromGuess: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -33,7 +35,6 @@ fun ShapeChallengeScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(16.dp))
-            val uiState = viewModel.uiState.collectAsState().value
             ShapeGrid(state = uiState)
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -42,7 +43,11 @@ fun ShapeChallengeScreen(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            ShapeButtons(viewModel = viewModel)
+            ShapeButtons(
+                addToGuess,
+                submitGuess,
+                removeLastFromGuess,
+            )
         }
         Spacer(modifier = Modifier.height(8.dp))
     }
@@ -53,16 +58,17 @@ fun ShapeChallengeScreen(
 fun ShapeScreenPreview() {
     CodeBreakerTheme {
         ShapeChallengeScreen(
-            viewModel = ShapeChallengeViewModel(
-                ShapeChallengeState(
-                    secretCode = listOf(Shape.TRIANGLE, Shape.PLUS, Shape.CIRCLE, Shape.CIRCLE),
-                    guesses = listOf(
-                        listOf(Shape.TRIANGLE, Shape.TRIANGLE, Shape.TRIANGLE, Shape.TRIANGLE),
-                        listOf(Shape.TRIANGLE, Shape.SQUARE, Shape.PLUS, Shape.CIRCLE),
-                    ),
-                    currentGuess = listOf(Shape.PLUS, Shape.CRESCENT, Shape.STAR),
-                )
+            uiState = ShapeChallengeState(
+                secretCode = listOf(Shape.TRIANGLE, Shape.PLUS, Shape.CIRCLE, Shape.CIRCLE),
+                guesses = listOf(
+                    listOf(Shape.TRIANGLE, Shape.TRIANGLE, Shape.TRIANGLE, Shape.TRIANGLE),
+                    listOf(Shape.TRIANGLE, Shape.SQUARE, Shape.PLUS, Shape.CIRCLE),
+                ),
+                currentGuess = listOf(Shape.PLUS, Shape.CRESCENT, Shape.STAR),
             ),
+            addToGuess = {},
+            submitGuess = {},
+            removeLastFromGuess = {},
         )
     }
 }

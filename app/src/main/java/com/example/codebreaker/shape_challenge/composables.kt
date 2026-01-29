@@ -208,7 +208,11 @@ fun GridBox(shape: Shape?) {
 }
 
 @Composable
-fun ShapeButtons(viewModel: ShapeChallengeViewModel) {
+fun ShapeButtons(
+    addToGuess: (Shape) -> Unit,
+    submitGuess: () -> Unit,
+    removeLastFromGuess: () -> Unit,
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -221,7 +225,7 @@ fun ShapeButtons(viewModel: ShapeChallengeViewModel) {
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 row.forEach { shape ->
-                    Button(onClick = { viewModel.addToGuess(shape) }) {
+                    Button(onClick = { addToGuess(shape) }) {
                         Image(
                             painter = painterResource(id = shape.drawable),
                             contentDescription = shape.toString(),
@@ -232,10 +236,10 @@ fun ShapeButtons(viewModel: ShapeChallengeViewModel) {
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(onClick = { viewModel.submitGuess() }) {
+            Button(onClick = submitGuess) {
                 Text("Submit")
             }
-            Button(onClick = { viewModel.removeLastFromGuess() }) {
+            Button(onClick = removeLastFromGuess) {
                 Text("Del")
             }
         }
