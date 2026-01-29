@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jetbrains.annotations.VisibleForTesting
 
 @Composable
 fun GameGrid(gameState: GameState) {
@@ -60,7 +61,7 @@ fun GameGrid(gameState: GameState) {
         }
 
         // Empty rows
-        for (i in 0 until (5 - gameState.guesses.size)) {
+        repeat(5 - gameState.guesses.size) {
              Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
@@ -211,7 +212,8 @@ fun getColors(letterState: LetterState): LetterColors =
         LetterState.NOT_GRADED -> LetterColors(Color.Black, Color.Transparent, Color.Gray)
     }
 
-fun checkGuess(guess: String, secretWord: String): List<Pair<Char, LetterState>> {
+@VisibleForTesting
+internal fun checkGuess(guess: String, secretWord: String): List<Pair<Char, LetterState>> {
     val unmatchedSecret = secretWord.filterIndexed { index, char ->
         guess[index] != char
     }.toMutableList()

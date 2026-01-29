@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.codebreaker.R
 import kotlinx.coroutines.launch
+import org.jetbrains.annotations.VisibleForTesting
 import kotlin.math.ceil
 import kotlin.math.sqrt
 
@@ -122,7 +123,8 @@ fun ShapeGrid(state: ShapeChallengeState) {
     }
 }
 
-private fun calculateFeedback(guess: List<Shape>, secret: List<Shape>): Pair<Int, Int> {
+@VisibleForTesting
+internal fun calculateFeedback(guess: List<Shape>, secret: List<Shape>): Pair<Int, Int> {
     var correctPositions = 0
     var correctShapes = 0
     val unmatchedSecret =
