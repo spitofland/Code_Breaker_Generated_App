@@ -13,13 +13,20 @@ class ShapeChallengeViewModel(initialState: ShapeChallengeState = ShapeChallenge
 
     init {
         if (initialState.secretCode.isEmpty()) {
-            generateSecretCode()
+            newGame()
         }
     }
 
     private fun generateSecretCode() {
         val secret = List(4) { Shape.entries.random() }
         _uiState.update { it.copy(secretCode = secret) }
+    }
+
+    fun newGame() {
+        generateSecretCode()
+        _uiState.update {
+            it.copy(guesses = emptyList(), currentGuess = emptyList())
+        }
     }
 
     fun addToGuess(shape: Shape) {
@@ -55,4 +62,7 @@ data class ShapeChallengeState(
     val secretCode: List<Shape> = emptyList(),
     val guesses: List<List<Shape>> = emptyList(),
     val currentGuess: List<Shape> = emptyList()
-)
+) {
+    val isGameOver: Boolean
+        get() = guesses.lastOrNull() == secretCode
+}

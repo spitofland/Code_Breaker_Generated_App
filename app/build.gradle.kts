@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.compose.ui.text)
     testImplementation(libs.assertj)
     testImplementation(libs.bundles.junit)
     testRuntimeOnly(libs.junit.platform.launcher)

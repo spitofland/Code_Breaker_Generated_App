@@ -19,9 +19,10 @@ class ShapeChallengeActivity : ComponentActivity() {
                     val uiState = viewModel.uiState.collectAsState().value
                     ShapeChallengeScreen(
                         uiState = uiState,
-                        addToGuess = { shape -> viewModel.addToGuess(shape) },
-                        submitGuess = { viewModel.submitGuess() },
-                        removeLastFromGuess = { viewModel.removeLastFromGuess() },
+                        addToGuess = viewModel::addToGuess,
+                        submitGuess = viewModel::submitGuess,
+                        removeLastFromGuess = viewModel::removeLastFromGuess,
+                        newGame = viewModel::newGame,
                     )
                 }
             }

@@ -8,11 +8,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Text
@@ -26,54 +24,35 @@ import org.jetbrains.annotations.VisibleForTesting
 
 @Composable
 fun GameGrid(gameState: GameState) {
-    Column {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
         // Previous guesses
         gameState.guesses.forEach { guess ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                checkGuess(guess, gameState.secretWord).forEachIndexed { index, char ->
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                checkGuess(guess, gameState.secretWord).forEach { char ->
                     GridBox(text = char.first.toString(), state = char.second)
-                    if (index < 4) {
-                        Spacer(modifier = Modifier.width(4.dp))
-                    }
                 }
             }
-            Spacer(modifier = Modifier.height(4.dp))
         }
 
         // Current guess
         if (gameState.guesses.size < 6) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 for (j in 0 until 5) {
                     val char = gameState.currentGuess.getOrNull(j)?.toString() ?: ""
                     GridBox(text = char, state = LetterState.NOT_GRADED)
-                    if (j < 4) {
-                        Spacer(modifier = Modifier.width(4.dp))
-                    }
                 }
             }
-            Spacer(modifier = Modifier.height(4.dp))
         }
 
         // Empty rows
         repeat(5 - gameState.guesses.size) {
-             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                for (j in 0 until 5) {
+             Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                repeat(5) {
                     GridBox(text = "", state = LetterState.NOT_GRADED)
-                    if (j < 4) {
-                        Spacer(modifier = Modifier.width(4.dp))
-                    }
                 }
             }
-            Spacer(modifier = Modifier.height(4.dp))
         }
     }
 }
@@ -135,7 +114,6 @@ fun Keyboard(
                     if (char.length == 1) 1f else 1.5f
                 }.sum()
             }
-    val maxRowLength = rows.maxOf { it.second }
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -145,11 +123,8 @@ fun Keyboard(
         rows.forEach { row ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(2.dp)
+                horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterHorizontally)
             ) {
-                if (row.second < maxRowLength) {
-                    Spacer(modifier = Modifier.weight((maxRowLength - row.second) / 2.0f))
-                }
                 row.first.forEach { char ->
                     val (onClick, label) =
                         when (char) {
@@ -163,9 +138,6 @@ fun Keyboard(
                         letterState = letterStates[char],
                         modifier = Modifier.weight(if (char.length == 1) 1f else 1.5f),
                     )
-                }
-                if (row.second < maxRowLength) {
-                    Spacer(modifier = Modifier.weight((maxRowLength - row.second) / 2.0f))
                 }
             }
         }

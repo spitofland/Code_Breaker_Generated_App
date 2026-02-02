@@ -6,9 +6,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
@@ -41,35 +40,6 @@ fun ShapeGrid(state: ShapeChallengeState) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        // Header Row
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            // Spacers for alignment with grid
-            repeat(4) {
-                Spacer(modifier = Modifier.width(60.dp))
-            }
-
-            // Headers for feedback columns
-            Row(
-                modifier = Modifier.width(60.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(text = "✓", color = Color.Green, fontSize = 20.sp)
-                HintInfoButton(hint = "Shapes in correct positions")
-            }
-            Row(
-                modifier = Modifier.width(60.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(text = "–", color = Color(0xFFFFA500), fontSize = 20.sp)
-                HintInfoButton(hint = "Correct shapes in wrong positions")
-            }
-        }
-
         val guesses = state.guesses
         val currentGuess = state.currentGuess
         val remainingGuesses = 11 - guesses.size
@@ -83,8 +53,8 @@ fun ShapeGrid(state: ShapeChallengeState) {
                     GridBox(shape = shape)
                 }
                 val (correctPosition, correctShape) = calculateFeedback(guess, state.secretCode)
-                FeedbackBox(text = correctPosition.toString())
-                FeedbackBox(text = correctShape.toString())
+                CorrectPositionFeedbackBox(text = correctPosition.toString())
+                WrongPositionFeedbackBox(text = correctShape.toString())
             }
         }
 
@@ -100,8 +70,8 @@ fun ShapeGrid(state: ShapeChallengeState) {
                 repeat(4 - currentGuess.size) {
                     GridBox(shape = null)
                 }
-                FeedbackBox()
-                FeedbackBox()
+                CorrectPositionFeedbackBox()
+                WrongPositionFeedbackBox()
             }
         }
 
@@ -116,8 +86,8 @@ fun ShapeGrid(state: ShapeChallengeState) {
                     GridBox(shape = null)
                 }
                 // Feedback Boxes
-                FeedbackBox()
-                FeedbackBox()
+                CorrectPositionFeedbackBox()
+                WrongPositionFeedbackBox()
             }
         }
     }
@@ -178,15 +148,52 @@ fun HintInfoButton(hint: String) {
 }
 
 @Composable
-fun FeedbackBox(text: String = "") {
-    Box(
-        modifier = Modifier
-            .size(30.dp)
-            .border(1.dp, Color.DarkGray),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = text, fontSize = 18.sp)
+fun FeedbackBox(
+    text: String = "",
+    icon: @Composable RowScope.() -> Unit,
+    hint: String = "",
+) {
+    Column {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            icon()
+            if (hint.isNotEmpty()) {
+                HintInfoButton(hint = hint)
+            }
+        }
+        Box(
+            modifier = Modifier
+                .size(30.dp)
+                .border(1.dp, Color.DarkGray),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = text, fontSize = 18.sp)
+        }
     }
+}
+
+@Composable
+fun CorrectPositionFeedbackBox(text: String = "") {
+    FeedbackBox(
+        text = text,
+        hint = "Shapes in correct positions",
+        icon = {
+            Text(text = "✓", color = Color.Green, fontSize = 20.sp)
+        }
+    )
+}
+
+@Composable
+fun WrongPositionFeedbackBox(text: String = "") {
+    FeedbackBox(
+        text = text,
+        hint = "Correct shapes in wrong positions",
+        icon = {
+            Text(text = "–", color = Color(0xFFFFA500), fontSize = 20.sp)
+        }
+    )
 }
 
 @Composable
@@ -213,35 +220,28 @@ fun ShapeButtons(
     submitGuess: () -> Unit,
     removeLastFromGuess: () -> Unit,
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        val numShapes = Shape.entries.count()
-        val numColumns = ceil(sqrt(numShapes.toFloat())).toInt()
+    val numShapes = Shape.entries.count()
+    val numColumns = ceil(sqrt(numShapes.toFloat())).toInt()
 
-        Shape.entries.chunked(numColumns).forEach { row ->
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                row.forEach { shape ->
-                    Button(onClick = { addToGuess(shape) }) {
-                        Image(
-                            painter = painterResource(id = shape.drawable),
-                            contentDescription = shape.toString(),
-                            modifier = Modifier.size(24.dp) // Adjust size as needed
-                        )
-                    }
+    Shape.entries.chunked(numColumns).forEach { row ->
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            row.forEach { shape ->
+                Button(onClick = { addToGuess(shape) }) {
+                    Image(
+                        painter = painterResource(id = shape.drawable),
+                        contentDescription = shape.toString(),
+                        modifier = Modifier.size(24.dp) // Adjust size as needed
+                    )
                 }
             }
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Button(onClick = submitGuess) {
-                Text("Submit")
-            }
-            Button(onClick = removeLastFromGuess) {
-                Text("Del")
-            }
+    }
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        Button(onClick = submitGuess) {
+            Text("Submit")
+        }
+        Button(onClick = removeLastFromGuess) {
+            Text("Del")
         }
     }
 }
