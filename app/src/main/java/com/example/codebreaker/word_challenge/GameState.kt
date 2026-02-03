@@ -7,5 +7,8 @@ data class GameState(
     val isCurrentGuessValidWord: Boolean = false,
 ) {
     val isGameOver: Boolean
+        get() = isWin || guesses.size >= 6
+
+    val isWin: Boolean
         get() = guesses.lastOrNull() == secretWord
 }

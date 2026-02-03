@@ -74,6 +74,21 @@ fun GridBox(text: String, state: LetterState) {
 private const val BACKSPACE = "Backspace"
 private const val SUBMIT_GUESS = "Submit"
 
+private val KEYBOARD_ROWS =
+    listOf(
+        "Q,W,E,R,T,Y,U,I,O,P",
+        "A,S,D,F,G,H,J,K,L",
+        "$BACKSPACE,Z,X,C,V,B,N,M,$SUBMIT_GUESS",
+    ).map { row ->
+        row.split(",")
+            .map { it to if (it.length == 1) 1f else 1.5f } // Key width weight
+    }.map { row ->
+        row to row.sumOf { it.second.toDouble() }.toFloat() // Row width weight
+    }.let { rows ->
+        val maxWeight = rows.maxOf { it.second }
+        rows.map { it.first to it.second / maxWeight } // Scale row weight to be [0.0f, 1.0f]
+    }
+
 @Composable
 fun Keyboard(
     gameState: GameState,
@@ -103,29 +118,18 @@ fun Keyboard(
             LetterState.NOT_GRADED
         }
 
-    val rows =
-        listOf(
-            "Q,W,E,R,T,Y,U,I,O,P",
-            "A,S,D,F,G,H,J,K,L",
-            "$BACKSPACE,Z,X,C,V,B,N,M,$SUBMIT_GUESS",
-        ).map { it.split(",") }
-            .map {
-                it to it.map { char ->
-                    if (char.length == 1) 1f else 1.5f
-                }.sum()
-            }
-
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        rows.forEach { row ->
+        KEYBOARD_ROWS.forEach { row ->
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(row.second),
                 horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterHorizontally)
             ) {
-                row.first.forEach { char ->
+                row.first.forEach {
+                    val char = it.first
                     val (onClick, label) =
                         when (char) {
                             BACKSPACE -> onBackspaceClick to "Del"
@@ -136,7 +140,7 @@ fun Keyboard(
                         char = label,
                         onClick = onClick,
                         letterState = letterStates[char],
-                        modifier = Modifier.weight(if (char.length == 1) 1f else 1.5f),
+                        modifier = Modifier.weight(it.second),
                     )
                 }
             }

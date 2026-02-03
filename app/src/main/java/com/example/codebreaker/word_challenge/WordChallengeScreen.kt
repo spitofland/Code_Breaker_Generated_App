@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -12,10 +11,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import com.example.codebreaker.common.GameOverPrompt
 import com.example.codebreaker.ui.theme.CodeBreakerTheme
 
 @Composable
@@ -46,14 +45,16 @@ private fun WordChallengeContent(
         Text(text = "Word Code Breaker", fontSize = 8.em)
         GameGrid(gameState = gameState)
         if (gameState.isGameOver) {
-            Text(
-                "SUCCESS!",
-                fontSize = 8.em,
-                fontWeight = FontWeight.Bold,
-                textDecoration = TextDecoration.Underline
-            )
-            Button(onClick = newGame) {
-                Text("New Game")
+            GameOverPrompt(
+                won = gameState.isWin,
+                guesses = gameState.guesses.size,
+                newGame = newGame,
+            ) {
+                Text(
+                    text = gameState.secretWord,
+                    fontSize = 8.em,
+                    fontWeight = FontWeight.Bold,
+                )
             }
         } else {
             Keyboard(
