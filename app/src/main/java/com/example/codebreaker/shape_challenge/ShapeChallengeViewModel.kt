@@ -64,5 +64,8 @@ data class ShapeChallengeState(
     val currentGuess: List<Shape> = emptyList()
 ) {
     val isGameOver: Boolean
+        get() = isWin || guesses.size >= 12
+
+    val isWin: Boolean
         get() = guesses.lastOrNull() == secretCode
 }

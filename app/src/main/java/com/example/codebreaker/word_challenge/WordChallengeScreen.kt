@@ -4,7 +4,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,6 +32,7 @@ fun WordChallengeScreen(viewModel: WordChallengeViewModel) {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun WordChallengeContent(
     gameState: GameState,
@@ -37,32 +41,40 @@ private fun WordChallengeContent(
     onBackspaceClick: () -> Unit,
     newGame: () -> Unit,
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Text(text = "Word Code Breaker", fontSize = 8.em)
-        GameGrid(gameState = gameState)
-        if (gameState.isGameOver) {
-            GameOverPrompt(
-                won = gameState.isWin,
-                guesses = gameState.guesses.size,
-                newGame = newGame,
-            ) {
-                Text(
-                    text = gameState.secretWord,
-                    fontSize = 8.em,
-                    fontWeight = FontWeight.Bold,
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text(text = "Word Code Breaker") })
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
+            GameGrid(gameState = gameState)
+            if (gameState.isGameOver) {
+                GameOverPrompt(
+                    won = gameState.isWin,
+                    guesses = gameState.guesses.size,
+                    newGame = newGame,
+                ) {
+                    Text(
+                        text = gameState.secretWord,
+                        fontSize = 8.em,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+            } else {
+                Keyboard(
+                    gameState = gameState,
+                    onLetterClick = onLetterClick,
+                    onEnterClick = onEnterClick,
+                    onBackspaceClick = onBackspaceClick,
                 )
             }
-        } else {
-            Keyboard(
-                gameState = gameState,
-                onLetterClick = onLetterClick,
-                onEnterClick = onEnterClick,
-                onBackspaceClick = onBackspaceClick,
-            )
         }
     }
 }
