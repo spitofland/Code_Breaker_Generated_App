@@ -1,5 +1,6 @@
 package com.example.codebreaker.word_challenge
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.example.codebreaker.settings.SettingsActivity
 import com.example.codebreaker.ui.theme.CodeBreakerTheme
 
 class WordChallengeActivity : ComponentActivity() {
@@ -23,7 +25,11 @@ class WordChallengeActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    WordChallengeScreen(viewModel)
+                    WordChallengeScreen(
+                        viewModel = viewModel,
+                        back = { finish() },
+                        settings = { startActivity(Intent(this, SettingsActivity::class.java)) }
+                    )
                 }
             }
         }

@@ -4,7 +4,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -21,7 +26,11 @@ import com.example.codebreaker.common.GameOverPrompt
 import com.example.codebreaker.ui.theme.CodeBreakerTheme
 
 @Composable
-fun WordChallengeScreen(viewModel: WordChallengeViewModel) {
+fun WordChallengeScreen(
+    viewModel: WordChallengeViewModel,
+    back: () -> Unit,
+    settings: () -> Unit,
+) {
     val gameState by viewModel.gameState.collectAsState()
     WordChallengeContent(
         gameState = gameState,
@@ -29,6 +38,8 @@ fun WordChallengeScreen(viewModel: WordChallengeViewModel) {
         onEnterClick = viewModel::onEnterClick,
         onBackspaceClick = viewModel::onBackspaceClick,
         newGame = viewModel::startGame,
+        back = back,
+        settings = settings
     )
 }
 
@@ -40,10 +51,24 @@ private fun WordChallengeContent(
     onEnterClick: () -> Unit,
     onBackspaceClick: () -> Unit,
     newGame: () -> Unit,
+    back: () -> Unit,
+    settings: () -> Unit,
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(text = "Word Code Breaker") })
+            TopAppBar(
+                title = { Text(text = "Word Code Breaker") },
+                navigationIcon = {
+                    IconButton(onClick = back) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = settings) {
+                        Icon(Icons.Default.Settings, contentDescription = "Settings")
+                    }
+                }
+            )
         }
     ) { padding ->
         Column(
@@ -93,6 +118,8 @@ fun WordChallengeScreenPreview() {
             onEnterClick = {},
             onBackspaceClick = {},
             newGame = {},
+            back = {},
+            settings = {}
         )
     }
 }
