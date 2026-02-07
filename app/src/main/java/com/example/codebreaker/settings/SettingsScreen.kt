@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.codebreaker.R
 
 @Composable
 fun SettingsScreen() {
@@ -31,21 +33,21 @@ fun SettingsScreen() {
 fun SettingsMenu(onPageSelected: (SettingsPage) -> Unit) {
     Column {
         Text(
-            text = "Word Challenge Settings",
+            text = stringResource(R.string.word_challenge_settings),
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onPageSelected(SettingsPage.WORD_CHALLENGE) }
                 .padding(16.dp)
         )
         Text(
-            text = "Shape Challenge Settings",
+            text = stringResource(R.string.shape_challenge_settings),
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onPageSelected(SettingsPage.SHAPE_CHALLENGE) }
                 .padding(16.dp)
         )
         Text(
-            text = "Color Settings",
+            text = stringResource(R.string.color_settings),
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onPageSelected(SettingsPage.COLOR) }
@@ -62,15 +64,15 @@ enum class SettingsPage {
 
 @Composable
 fun WordChallengeSettings() {
-    Text(text = "Word Challenge Settings Page")
+    Text(text = stringResource(R.string.word_challenge_settings_page))
 }
 
 @Composable
 fun ShapeChallengeSettings() {
-    Text(text = "Shape Challenge Settings Page")
+    Text(text = stringResource(R.string.shape_challenge_settings_page))
 }
 
 @Composable
 fun ColorSettings() {
-    Text(text = "Color Settings Page")
+    Text(text = stringResource(R.string.color_settings_page))
 }
