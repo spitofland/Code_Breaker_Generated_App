@@ -14,7 +14,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.CodeBreaker">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,17 +24,17 @@
         <activity
             android:name=".word_challenge.WordChallengeActivity"
             android:exported="false"
-            android:label="@string/app_name"
+            android:label="@string/word_game_title"
             android:theme="@style/Theme.CodeBreaker" />
         <activity
             android:name=".shape_challenge.ShapeChallengeActivity"
             android:exported="false"
-            android:label="@string/app_name"
+            android:label="@string/shape_game_title"
             android:theme="@style/Theme.CodeBreaker" />
         <activity
             android:name=".settings.SettingsActivity"
             android:exported="false"
-            android:label="@string/title_activity_settings"
+            android:label="@string/settings_title"
             android:theme="@style/Theme.CodeBreaker" />
     </application>
 

@@ -18,10 +18,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import com.example.codebreaker.R
 import com.example.codebreaker.common.GameOverPrompt
 import com.example.codebreaker.ui.theme.CodeBreakerTheme
 
@@ -57,15 +59,21 @@ private fun WordChallengeContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Word Code Breaker") },
+                title = { Text(text = stringResource(R.string.word_game_title)) },
                 navigationIcon = {
                     IconButton(onClick = back) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.navigation_go_back),
+                        )
                     }
                 },
                 actions = {
                     IconButton(onClick = settings) {
-                        Icon(Icons.Default.Settings, contentDescription = "Settings")
+                        Icon(
+                            Icons.Default.Settings,
+                            contentDescription = stringResource(R.string.settings_title),
+                        )
                     }
                 }
             )

@@ -33,21 +33,21 @@ fun SettingsScreen() {
 fun SettingsMenu(onPageSelected: (SettingsPage) -> Unit) {
     Column {
         Text(
-            text = stringResource(R.string.word_challenge_settings),
+            text = stringResource(R.string.settings_word_game),
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onPageSelected(SettingsPage.WORD_CHALLENGE) }
                 .padding(16.dp)
         )
         Text(
-            text = stringResource(R.string.shape_challenge_settings),
+            text = stringResource(R.string.settings_shape_game),
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onPageSelected(SettingsPage.SHAPE_CHALLENGE) }
                 .padding(16.dp)
         )
         Text(
-            text = stringResource(R.string.color_settings),
+            text = stringResource(R.string.settings_color_title),
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { onPageSelected(SettingsPage.COLOR) }
@@ -64,15 +64,15 @@ enum class SettingsPage {
 
 @Composable
 fun WordChallengeSettings() {
-    Text(text = stringResource(R.string.word_challenge_settings_page))
+    Text(text = stringResource(R.string.settings_word_game_page))
 }
 
 @Composable
 fun ShapeChallengeSettings() {
-    Text(text = stringResource(R.string.shape_challenge_settings_page))
+    Text(text = stringResource(R.string.settings_shape_game_page))
 }
 
 @Composable
 fun ColorSettings() {
-    Text(text = stringResource(R.string.color_settings_page))
+    Text(text = stringResource(R.string.settings_color_page))
 }

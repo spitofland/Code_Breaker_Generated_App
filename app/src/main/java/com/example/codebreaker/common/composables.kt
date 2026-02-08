@@ -7,10 +7,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import com.example.codebreaker.R
 
 @Composable
 fun GameOverPrompt(
@@ -25,25 +27,25 @@ fun GameOverPrompt(
     ) {
         if (won) {
             Text(
-                "SUCCESS!",
+                stringResource(R.string.game_over_success),
                 fontSize = 8.em,
                 fontWeight = FontWeight.Bold,
                 textDecoration = TextDecoration.Underline,
             )
             Text(
-                "$guesses Guesses",
+                stringResource(R.string.game_over_guesses) + guesses,
                 fontSize = 6.em,
                 fontWeight = FontWeight.Bold,
             )
         } else {
             Text(
-                "GAME OVER",
+                stringResource(R.string.game_over_fail),
                 fontSize = 8.em,
                 fontWeight = FontWeight.Bold,
                 textDecoration = TextDecoration.Underline,
             )
             Text(
-                "The secret was:",
+                stringResource(R.string.game_over_secret),
                 fontSize = 4.em,
                 fontWeight = FontWeight.Bold,
             )
@@ -51,6 +53,6 @@ fun GameOverPrompt(
         }
     }
     Button(onClick = newGame) {
-        Text("New Game")
+        Text(stringResource(R.string.game_over_new_game))
     }
 }
