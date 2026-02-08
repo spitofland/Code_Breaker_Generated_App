@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Code Finder</string>
+    <string name="buttons_backspace">Backspace</string>
+    <string name="buttons_submit">Submit Guess</string>
     <string name="main_menu_start_new">Start New:</string>
     <string name="navigation_go_back">Go Back</string>
     <!-- Settings -->
@@ -12,6 +14,12 @@
     <string name="settings_word_game_page">Word Challenge Settings Page</string>
     <!-- Shape Game -->
     <string name="shape_game_title">Pattern Finder</string>
+    <string name="shape_circle">Circle</string>
+    <string name="shape_triangle">Triangle</string>
+    <string name="shape_square">Square</string>
+    <string name="shape_plus">Plus</string>
+    <string name="shape_crescent">Crescent</string>
+    <string name="shape_star">Star</string>
     <!-- Word Game -->
     <string name="word_game_title">Word Finder</string>
     <!-- Game Over Prompt -->

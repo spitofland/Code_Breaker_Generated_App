@@ -1,6 +1,7 @@
 package com.example.codebreaker.word_challenge
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -18,8 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.codebreaker.R
 import org.jetbrains.annotations.VisibleForTesting
 
 @Composable
@@ -130,17 +135,31 @@ fun Keyboard(
             ) {
                 row.first.forEach {
                     val char = it.first
-                    val (onClick, label) =
+                    val (onClick, content) =
                         when (char) {
-                            BACKSPACE -> onBackspaceClick to "Del"
-                            SUBMIT_GUESS -> onEnterClick to ">>"
-                            else -> fun() { onLetterClick(char.first()) } to char
+                            BACKSPACE -> onBackspaceClick to @Composable { _: RowScope, color: Color ->
+                                Image(
+                                    painter = painterResource(id = R.drawable.backspace),
+                                    contentDescription = stringResource(R.string.buttons_backspace),
+                                    colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(color),
+                                )
+                            }
+                            SUBMIT_GUESS -> onEnterClick to @Composable { _: RowScope, color: Color ->
+                                Image(
+                                    painter = painterResource(id = R.drawable.send),
+                                    contentDescription = stringResource(R.string.buttons_submit),
+                                    colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(color),
+                                )
+                            }
+                            else -> fun() { onLetterClick(char.first()) } to @Composable { _: RowScope, color: Color ->
+                                Text(text = char, color = color)
+                            }
                         }
                     KeyButton(
-                        char = label,
                         onClick = onClick,
                         letterState = letterStates[char],
                         modifier = Modifier.weight(it.second),
+                        content = content,
                     )
                 }
             }
@@ -149,7 +168,12 @@ fun Keyboard(
 }
 
 @Composable
-fun KeyButton(char: String, onClick: () -> Unit, letterState: LetterState?, modifier: Modifier = Modifier) {
+fun KeyButton(
+    onClick: () -> Unit,
+    letterState: LetterState?,
+    modifier: Modifier = Modifier,
+    content: @Composable (RowScope.(color: Color) -> Unit),
+) {
     val colors = getColors(letterState ?: LetterState.NOT_GRADED)
     Button(
         onClick = onClick,
@@ -162,9 +186,8 @@ fun KeyButton(char: String, onClick: () -> Unit, letterState: LetterState?, modi
             colors.background,
             colors.background
         ),
-    ) {
-        Text(text = char, color = colors.text)
-    }
+        content = { content(colors.text) },
+    )
 }
 
 enum class LetterState {

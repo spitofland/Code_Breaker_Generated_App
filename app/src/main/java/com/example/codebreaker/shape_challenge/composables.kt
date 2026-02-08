@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.codebreaker.R
@@ -113,7 +114,6 @@ internal fun calculateFeedback(guess: List<Shape>, secret: List<Shape>): Pair<In
 
     return Pair(correctPositions, correctShapes)
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -229,7 +229,7 @@ fun ShapeButtons(
                 Button(onClick = { addToGuess(shape) }) {
                     Image(
                         painter = painterResource(id = shape.drawable),
-                        contentDescription = shape.toString(),
+                        contentDescription = stringResource(shape.description),
                         modifier = Modifier.size(24.dp) // Adjust size as needed
                     )
                 }
@@ -237,21 +237,30 @@ fun ShapeButtons(
         }
     }
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        Button(onClick = submitGuess) {
-            Text("Submit")
-        }
         Button(onClick = removeLastFromGuess) {
-            Text("Del")
+            Image(
+                painter = painterResource(id = R.drawable.backspace),
+                contentDescription = stringResource(R.string.buttons_backspace),
+            )
+        }
+        Button(onClick = submitGuess) {
+            Image(
+                painter = painterResource(id = R.drawable.send),
+                contentDescription = stringResource(R.string.buttons_submit),
+            )
         }
     }
 }
 
-enum class Shape(val drawable: Int) {
-    CIRCLE(R.drawable.ic_circle),
-    TRIANGLE(R.drawable.ic_triangle),
-    SQUARE(R.drawable.ic_square),
-    PLUS(R.drawable.ic_plus),
-    CRESCENT(R.drawable.ic_crescent),
-    STAR(R.drawable.ic_star),
+enum class Shape(
+    val drawable: Int,
+    val description: Int,
+) {
+    CIRCLE(R.drawable.ic_circle, R.string.shape_circle),
+    TRIANGLE(R.drawable.ic_triangle, R.string.shape_triangle),
+    SQUARE(R.drawable.ic_square, R.string.shape_square),
+    PLUS(R.drawable.ic_plus, R.string.shape_plus),
+    CRESCENT(R.drawable.ic_crescent, R.string.shape_crescent),
+    STAR(R.drawable.ic_star, R.string.shape_star),
     ;
 }
