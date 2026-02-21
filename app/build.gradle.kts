@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.compose.ui.text)
     implementation(libs.material)
+    implementation(libs.androidx.datastore.preferences)
     testImplementation(libs.assertj)
     testImplementation(libs.bundles.junit)
     testRuntimeOnly(libs.junit.platform.launcher)

@@ -14,15 +14,24 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.codebreaker.R
+import com.example.codebreaker.data.ColorSettingsStore
+import com.example.codebreaker.ui.theme.CodeBreakerTheme
+import com.example.codebreaker.viewmodel.ColorSettingsViewModel
+import com.example.codebreaker.viewmodel.ColorSettingsViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    back: () -> Unit
+    back: () -> Unit,
+    viewModel: ColorSettingsViewModel = viewModel(
+        factory = ColorSettingsViewModelFactory(ColorSettingsStore(androidx.compose.ui.platform.LocalContext.current))
+    )
 ) {
     var selectedPage by remember { mutableStateOf<SettingsPage?>(null) }
 
@@ -56,7 +65,7 @@ fun SettingsScreen(
                 when (selectedPage) {
                     SettingsPage.WORD_CHALLENGE -> WordChallengeSettings()
                     SettingsPage.SHAPE_CHALLENGE -> ShapeChallengeSettings()
-                    SettingsPage.COLOR -> ColorSettings()
+                    SettingsPage.COLOR -> ColorSettings(viewModel)
                     null -> {}
                 }
             }
@@ -114,25 +123,27 @@ fun ShapeChallengeSettings() {
 }
 
 @Composable
-fun ColorSettings() {
+fun ColorSettings(viewModel: ColorSettingsViewModel) {
+    val backgroundColor by viewModel.backgroundColor.collectAsState()
+    val foregroundColor by viewModel.foregroundColor.collectAsState()
     Column(modifier = Modifier.padding(16.dp)) {
         ColorPicker(
             title = stringResource(R.string.settings_background_color),
-            initialColor = 0
-        ) {
-
-        }
+            initialColor = backgroundColor ?: Color.Black,
+            viewModel = viewModel,
+        ) { viewModel.setBackgroundColor(it) }
         ColorPicker(
             title = stringResource(R.string.settings_foreground_color),
-            initialColor = 0
-        ) {
-
-        }
+            initialColor = foregroundColor ?: Color.White,
+            viewModel = viewModel,
+        ) { viewModel.setForegroundColor(it) }
     }
 }
 
 @Preview
 @Composable
 fun SettingsScreenPreview() {
-    SettingsScreen { }
+    CodeBreakerTheme {
+        SettingsScreen(back = {})
+    }
 }
