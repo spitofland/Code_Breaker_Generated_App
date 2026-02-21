@@ -8,7 +8,9 @@ class SettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SettingsScreen()
+            SettingsScreen {
+                finish()
+            }
         }
     }
 }

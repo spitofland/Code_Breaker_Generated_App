@@ -12,6 +12,8 @@
     <string name="settings_shape_game_page">Shape Challenge Settings Page</string>
     <string name="settings_word_game">Word Challenge Settings</string>
     <string name="settings_word_game_page">Word Challenge Settings Page</string>
+    <string name="settings_background_color">Background Color</string>
+    <string name="settings_foreground_color">Foreground Color</string>
     <!-- Shape Game -->
     <string name="shape_game_title">Pattern Finder</string>
     <string name="shape_circle">Circle</string>
