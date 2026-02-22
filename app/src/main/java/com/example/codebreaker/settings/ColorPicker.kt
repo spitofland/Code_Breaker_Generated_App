@@ -84,6 +84,6 @@ fun ColorPickerPreview() {
         "Preview Color",
         Color(0xAA, 0x11, 0x88),
         Color.Gray,
-        Color.Green,
+        Color.Black,
     ) { }
 }

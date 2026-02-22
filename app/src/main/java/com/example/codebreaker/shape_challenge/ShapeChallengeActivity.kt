@@ -5,8 +5,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
+import androidx.core.view.WindowCompat
 import com.example.codebreaker.settings.SettingsActivity
 import com.example.codebreaker.ui.theme.CodeBreakerTheme
 
@@ -15,20 +15,19 @@ class ShapeChallengeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, true)
         setContent {
             CodeBreakerTheme {
-                Surface {
-                    val uiState = viewModel.uiState.collectAsState().value
-                    ShapeChallengeScreen(
-                        uiState = uiState,
-                        addToGuess = viewModel::addToGuess,
-                        submitGuess = viewModel::submitGuess,
-                        removeLastFromGuess = viewModel::removeLastFromGuess,
-                        newGame = viewModel::newGame,
-                        back = { finish() },
-                        settings = { startActivity(Intent(this, SettingsActivity::class.java)) }
-                    )
-                }
+                val uiState = viewModel.uiState.collectAsState().value
+                ShapeChallengeScreen(
+                    uiState = uiState,
+                    addToGuess = viewModel::addToGuess,
+                    submitGuess = viewModel::submitGuess,
+                    removeLastFromGuess = viewModel::removeLastFromGuess,
+                    newGame = viewModel::newGame,
+                    back = { finish() },
+                    settings = { startActivity(Intent(this, SettingsActivity::class.java)) }
+                )
             }
         }
     }

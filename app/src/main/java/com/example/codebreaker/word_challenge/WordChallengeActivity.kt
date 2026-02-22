@@ -7,8 +7,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.core.view.WindowCompat
 import com.example.codebreaker.settings.SettingsActivity
 import com.example.codebreaker.ui.theme.CodeBreakerTheme
 
@@ -17,19 +17,16 @@ class WordChallengeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, true)
         viewModel.startGame()
         setContent {
             CodeBreakerTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    WordChallengeScreen(
-                        viewModel = viewModel,
-                        back = { finish() },
-                        settings = { startActivity(Intent(this, SettingsActivity::class.java)) }
-                    )
-                }
+                WordChallengeScreen(
+                    viewModel = viewModel,
+                    back = { finish() },
+                    settings = { startActivity(Intent(this, SettingsActivity::class.java)) }
+                )
             }
         }
     }

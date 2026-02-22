@@ -1,4 +1,6 @@
 <resources>
 
-    <style name="Theme.CodeBreaker" parent="Theme.Material3.DayNight.NoActionBar" />
+    <style name="Theme.CodeBreaker" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+    </style>
 </resources>
